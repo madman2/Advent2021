@@ -10,7 +10,7 @@ namespace AdventOfCode
 
         public string SolveFirstStar(StreamReader reader)
         {
-            var instructionList = StreamParsers.GetStreamAsListOfDelimitedStrings(reader, new char[] {' '});
+            var instructionList = StreamParsers.GetStreamAsListOfDelimitedStrings(reader, ' ');
 
             int horizontal = 0;
             int depth = 0;
@@ -30,7 +30,7 @@ namespace AdventOfCode
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var numberList = StreamParsers.GetStreamAsListOfDelimitedStrings(reader, new char[] {' '});
+            var numberList = StreamParsers.GetStreamAsListOfDelimitedStrings(reader, ' ');
 
             int horizontal = 0;
             int depth = 0;
