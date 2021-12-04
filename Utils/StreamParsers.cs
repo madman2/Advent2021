@@ -94,6 +94,19 @@ namespace AdventOfCode.Utils
             return arrayToReturn;
         }
 
+        public static int[][] GetStreamAs2DIntArray(StreamReader reader, char delimiter = ' ', int fromBase = 10)
+        {
+            var stringList = GetStreamAsStringList(reader);
+            var arrayToReturn = new int[stringList.Count][];
+
+            for (int i = 0; i < stringList.Count; ++i)
+            {
+                arrayToReturn[i] = StringParsers.SplitDelimitedStringIntoIntList(stringList[i], delimiter, fromBase).ToArray();
+            }
+
+            return arrayToReturn;
+        }
+
         public static int[][] GetStreamAs2DBitArray(StreamReader reader, char oneRepresentation = '#')
         {
             var stringList = GetStreamAsStringList(reader);
@@ -107,9 +120,9 @@ namespace AdventOfCode.Utils
             return arrayToReturn;
         }
 
-        public static List<IList<char>> GetStreamAs2DCharList(StreamReader reader)
+        public static List<List<char>> GetStreamAs2DCharList(StreamReader reader)
         {
-            var listToReturn = new List<IList<char>>();
+            var listToReturn = new List<List<char>>();
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
@@ -122,9 +135,22 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static List<IList<int>> GetStreamAs2DBitList(StreamReader reader, char oneRepresentation = '#')
+        public static List<List<int>> GetStreamAs2DIntList(StreamReader reader, char delimiter = ' ', int fromBase = 10)
         {
-            var listToReturn = new List<IList<int>>();
+            var listToReturn = new List<List<int>>();
+            string line;
+            while (!string.IsNullOrEmpty(line = reader.ReadLine()))
+            {
+                var lineAsList = StringParsers.SplitDelimitedStringIntoIntList(line, delimiter, fromBase);
+                listToReturn.Add(lineAsList.Select(x => Convert.ToInt32(x)).ToList());
+            }
+
+            return listToReturn;
+        }
+
+        public static List<List<int>> GetStreamAs2DBitList(StreamReader reader, char oneRepresentation = '#')
+        {
+            var listToReturn = new List<List<int>>();
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {

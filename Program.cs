@@ -7,7 +7,7 @@ namespace AdventOfCode
 {
     class Program
     {
-        private const int DayToSolve = 3;
+        private const int DayToSolve = 4;
 
         static void Main(string[] args)
         {
