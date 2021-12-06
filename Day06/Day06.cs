@@ -30,12 +30,25 @@ namespace AdventOfCode
 
         private long PredictLanternfish(List<int> initialFishList, int days)
         {
-            var spawnPerDay = new long[days + 1];
+            var fishTimerCounts = new Dictionary<int, int>();
             foreach (var fishTimer in initialFishList)
+            {
+                if (!fishTimerCounts.ContainsKey(fishTimer))
+                {
+                    fishTimerCounts.Add(fishTimer, 1);
+                }
+                else
+                {
+                    fishTimerCounts[fishTimer]++;
+                }
+            }
+
+            var spawnPerDay = new long[days + 1];
+            foreach (var fishTimer in fishTimerCounts.Keys)
             {
                 for (int i = fishTimer + 1; i <= days; i += SpawnCycle)
                 {
-                    spawnPerDay[i]++;
+                    spawnPerDay[i] += fishTimerCounts[fishTimer];
                 }
             }
 
