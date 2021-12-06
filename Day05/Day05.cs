@@ -3,7 +3,6 @@ using AdventOfCode.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace AdventOfCode
 {
@@ -19,52 +18,14 @@ namespace AdventOfCode
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                var splitLine = line.Split(" ->", StringSplitOptions.TrimEntries);
+                var splitLine = line.Split("->", StringSplitOptions.TrimEntries);
                 var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ',');
                 var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ',');
 
                 var startTuple = (int.Parse(start[0]), int.Parse(start[1]));
                 var endTuple = (int.Parse(end[0]), int.Parse(end[1]));
 
-                if (startTuple.Item1 == endTuple.Item1)
-                {
-                    for (int y = Math.Min(startTuple.Item2, endTuple.Item2); y <= Math.Max(startTuple.Item2, endTuple.Item2); ++y)
-                    {
-                        var point = (startTuple.Item1, y);
-                        if (!linesPerPoint.ContainsKey(point))
-                        {
-                            linesPerPoint.Add(point, 1);
-                        }
-                        else
-                        {
-                            linesPerPoint[point]++;
-                            if (linesPerPoint[point] == 2)
-                            {
-                                overlapCount++;
-                            }
-                        }
-                    }
-                }
-
-                if (startTuple.Item2 == endTuple.Item2)
-                {
-                    for (int x = Math.Min(startTuple.Item1, endTuple.Item1); x <= Math.Max(startTuple.Item1, endTuple.Item1); ++x)
-                    {
-                        var point = (x, startTuple.Item2);
-                        if (!linesPerPoint.ContainsKey(point))
-                        {
-                            linesPerPoint.Add(point, 1);
-                        }
-                        else
-                        {
-                            linesPerPoint[point]++;
-                            if (linesPerPoint[point] == 2)
-                            {
-                                overlapCount++;
-                            }
-                        }
-                    }
-                }
+                overlapCount += DrawLine(startTuple, endTuple, linesPerPoint, false);
             }
 
             return overlapCount.ToString();
@@ -78,82 +39,55 @@ namespace AdventOfCode
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                var splitLine = line.Split(" ->", StringSplitOptions.TrimEntries);
+                var splitLine = line.Split("->", StringSplitOptions.TrimEntries);
                 var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ',');
                 var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ',');
 
                 var startTuple = (int.Parse(start[0]), int.Parse(start[1]));
                 var endTuple = (int.Parse(end[0]), int.Parse(end[1]));
 
-                if (startTuple.Item1 == endTuple.Item1)
-                {
-                    for (int y = Math.Min(startTuple.Item2, endTuple.Item2); y <= Math.Max(startTuple.Item2, endTuple.Item2); ++y)
-                    {
-                        var point = (startTuple.Item1, y);
-                        if (!linesPerPoint.ContainsKey(point))
-                        {
-                            linesPerPoint.Add(point, 1);
-                        }
-                        else
-                        {
-                            linesPerPoint[point]++;
-                            if (linesPerPoint[point] == 2)
-                            {
-                                overlapCount++;
-                            }
-                        }
-                    }
-                }
-                else if (startTuple.Item2 == endTuple.Item2)
-                {
-                    for (int x = Math.Min(startTuple.Item1, endTuple.Item1); x <= Math.Max(startTuple.Item1, endTuple.Item1); ++x)
-                    {
-                        var point = (x, startTuple.Item2);
-                        if (!linesPerPoint.ContainsKey(point))
-                        {
-                            linesPerPoint.Add(point, 1);
-                        }
-                        else
-                        {
-                            linesPerPoint[point]++;
-                            if (linesPerPoint[point] == 2)
-                            {
-                                overlapCount++;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    int slope = -1;
-                    if ((startTuple.Item1 < endTuple.Item1 && startTuple.Item2 < endTuple.Item2) ||
-                        startTuple.Item1 > endTuple.Item1 && startTuple.Item2 > endTuple.Item2)
-                    {
-                        slope = 1;
-                    }
-
-                    int y = (startTuple.Item1 < endTuple.Item1) ? startTuple.Item2 : endTuple.Item2;
-                    for (int x = Math.Min(startTuple.Item1, endTuple.Item1); x <= Math.Max(startTuple.Item1, endTuple.Item1); ++x)
-                    {
-                        var point = (x, y);
-                        if (!linesPerPoint.ContainsKey(point))
-                        {
-                            linesPerPoint.Add(point, 1);
-                        }
-                        else
-                        {
-                            linesPerPoint[point]++;
-                            if (linesPerPoint[point] == 2)
-                            {
-                                overlapCount++;
-                            }
-                        }
-                        y += slope;
-                    }
-                }
+                overlapCount += DrawLine(startTuple, endTuple, linesPerPoint, true);
             }
 
             return overlapCount.ToString();
+        }
+
+        private int DrawLine((int, int) start, (int, int) end, IDictionary<(int, int), int> linesPerPoint, bool diagEnabled)
+        {
+            int newPointsCovered = 0;
+            if (start.Item1 == end.Item1 || start.Item2 == end.Item2 || diagEnabled)
+            {
+                var deltaX = end.Item1 - start.Item1;
+                var deltaY = end.Item2 - start.Item2;
+
+                var stepX = (deltaX == 0) ? 0 : (deltaX < 0) ? -1 : 1;
+                var stepY = (deltaY == 0) ? 0 : (deltaY < 0) ? -1 : 1;
+                
+                var dist = Math.Max(Math.Abs(deltaX), Math.Abs(deltaY));
+
+                int x = start.Item1;
+                int y = start.Item2;
+                for (int i = 0; i <= dist; ++i)
+                {
+                    if (!linesPerPoint.ContainsKey((x, y)))
+                    {
+                        linesPerPoint[(x, y)] = 1;
+                    }
+                    else
+                    {
+                        linesPerPoint[(x, y)]++;
+                        if (linesPerPoint[(x, y)] == 2)
+                        {
+                            newPointsCovered++;
+                        }
+                    }
+
+                    x += stepX;
+                    y += stepY;
+                }
+            }
+
+            return newPointsCovered;
         }
     }
 }
