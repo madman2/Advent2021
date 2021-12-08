@@ -1,6 +1,5 @@
 ﻿using AdventOfCode.Interfaces;
 using AdventOfCode.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,30 +9,6 @@ namespace AdventOfCode
     public class Day08 : ISolver
     {
         public string InputFileName { get; } = "input.txt";
-
-        /*       2       */
-        /*   ---------   */
-        /*  |         |  */
-        /* 1|         |3 */
-        /*  |    6    |  */
-        /*   ---------   */
-        /*  |         |  */
-        /* 0|         |4 */
-        /*  |    5    |  */
-        /*   ---------   */
-
-        private static readonly List<HashSet<int>> SegmentLookup = new List<HashSet<int>> { 
-            new HashSet<int> { 0, 1, 2, 3, 4, 5 },      // 0
-            new HashSet<int> { 3, 4 },                  // 1
-            new HashSet<int> { 0, 2, 3, 5, 6 },         // 2
-            new HashSet<int> { 2, 3, 4, 5, 6 },         // 3
-            new HashSet<int> { 1, 3, 4, 6 },            // 4
-            new HashSet<int> { 1, 2, 4, 5, 6 },         // 5
-            new HashSet<int> { 0, 1, 2, 4, 5, 6 },      // 6
-            new HashSet<int> { 2, 3, 4 },               // 7
-            new HashSet<int> { 0, 1, 2, 3, 4, 5, 6},    // 8
-            new HashSet<int> { 1, 2, 3, 4, 5, 6}        // 9
-        };
 
         public string SolveFirstStar(StreamReader reader)
         {
@@ -58,82 +33,100 @@ namespace AdventOfCode
                 var inputOutput = StringParsers.SplitDelimitedStringIntoStringList(line, '|');
                 var inputList = StringParsers.SplitDelimitedStringIntoStringList(inputOutput[0]);
                 var outputList = StringParsers.SplitDelimitedStringIntoStringList(inputOutput[1]);
-                var inputSets = inputList.Select(x => new HashSet<char>(x)).ToList();
+                var inputSorted = inputList.Select(x => string.Concat(x.OrderBy(c => c))).ToList();
+                var outputSorted = outputList.Select(x => string.Concat(x.OrderBy(c => c))).ToList();
 
-                sum += ComputeOutputValue(inputSets, outputList);
+                sum += Decode(inputSorted, outputSorted);
             }
 
             return sum.ToString();
         }
 
-        private int ComputeOutputValue(List<HashSet<char>> inputs, List<string> outputs)
+        private int Decode(List<string> inputs, List<string> outputs)
         {
-            var decoder = new char[7];
+            /* Segments:     */
+            /*       2       */
+            /*   ---------   */
+            /*  |         |  */
+            /* 1|         |3 */
+            /*  |    6    |  */
+            /*   ---------   */
+            /*  |         |  */
+            /* 0|         |4 */
+            /*  |    5    |  */
+            /*   ---------   */
 
-            var oneDigit = inputs.First(x => x.Count == 2);
-            var sevenDigit = inputs.First(x => x.Count == 3);
-            var fourDigit = inputs.First(x => x.Count == 4);
-            var eightDigit = inputs.First(x => x.Count == 7);
+            var segments = new char[7];
+            var sortedInputs = new string[inputs.Count()];
+
+            for (int i = inputs.Count - 1; i >= 0; --i)
+            {
+                var inputCode = inputs[i];
+                switch (inputCode.Length)
+                {
+                    case 2:
+                        sortedInputs[1] = inputCode;
+                        inputs.RemoveAt(i);
+                        break;
+                    case 3:
+                        sortedInputs[7] = inputCode;
+                        inputs.RemoveAt(i);
+                        break;
+                    case 4:
+                        sortedInputs[4] = inputCode;
+                        inputs.RemoveAt(i);
+                        break;
+                    case 7:
+                        sortedInputs[8] = inputCode;
+                        inputs.RemoveAt(i);
+                        break;
+                }
+            }
 
             // Top segment
-            decoder[2] = sevenDigit.Except(oneDigit).First();
+            segments[2] = sortedInputs[7].Except(sortedInputs[1]).First();
 
             // Segments 1 & 6, order unknown
-            var topLeftAndMiddle = fourDigit.Except(oneDigit);
+            var topLeftAndMiddle = sortedInputs[4].Except(sortedInputs[1]);
 
-            var nineDigit = inputs.Where(x => (x.Count == 6 && x.IsSupersetOf(fourDigit) && x.Contains(decoder[2]))).First();
-            inputs.Remove(nineDigit);
+            var nineDigitIndex = inputs.FindIndex(x => (x.Length == 6 && sortedInputs[4].All(x.Contains) && x.Contains(segments[2])));
+            sortedInputs[9] = inputs[nineDigitIndex];
+            inputs.RemoveAt(nineDigitIndex);
 
-            // Bottom segment
-            decoder[5] = nineDigit.Except(fourDigit).Where(x => x != decoder[2]).First();
+            var zeroDigitIndex = inputs.FindIndex(x => x.Length == 6 && x.Intersect(topLeftAndMiddle).Count() == 1);
+            sortedInputs[0] = inputs[zeroDigitIndex];
+            inputs.RemoveAt(zeroDigitIndex);
 
-            var zeroDigit = inputs.Where(x => x.Count == 6 && x.Intersect(topLeftAndMiddle).Count() == 1).First();
-            inputs.Remove(zeroDigit);
-
-            // Middle segment
-            decoder[6] = eightDigit.Except(zeroDigit).First();
-            // Top left segment
-            decoder[1] = topLeftAndMiddle.Where(x => x != decoder[6]).First();
-            // Bottom left segment
-            decoder[0] = eightDigit.Except(nineDigit).First();
-
-            var sixDigit = inputs.Where(x => x.Count == 6).First();
+            var sixDigitIndex = inputs.FindIndex(x => x.Length == 6);
+            sortedInputs[6] = inputs[sixDigitIndex];
+            inputs.RemoveAt(sixDigitIndex);
 
             // Top right segment
-            decoder[3] = oneDigit.Except(sixDigit).First();
-            // Bottom right segment
-            decoder[4] = oneDigit.Where(x => x != decoder[3]).First();
+            segments[3] = sortedInputs[1].Except(sortedInputs[6]).First();
+
+            var threeDigitIndex = inputs.FindIndex(x => sortedInputs[1].All(x.Contains));
+            sortedInputs[3] = inputs[threeDigitIndex];
+            inputs.RemoveAt(threeDigitIndex);
+
+            var twoDigitIndex = inputs.FindIndex(x => x.Contains(segments[3]));
+            sortedInputs[2] = inputs[twoDigitIndex];
+            inputs.RemoveAt(twoDigitIndex);
+
+            sortedInputs[5] = inputs.First();
+
+            var segmentsToValue = new Dictionary<string, int>();
+            for (int i = 0; i < sortedInputs.Length; ++i)
+            {
+                segmentsToValue.Add(sortedInputs[i], i);
+            }
 
             int decodedNumber = 0;
             foreach (var digit in outputs)
             {
-                decodedNumber = 10 * decodedNumber + Decode(decoder, digit);
+                decodedNumber = 10 * decodedNumber + segmentsToValue[digit];
             }
 
             return decodedNumber;
-        }
-
-        private int Decode(char[] decoder, string code)
-        {
-            var decoderDict = new Dictionary<char, int>();
-            for (int segment = 0; segment < decoder.Count(); ++segment)
-            {
-                decoderDict.Add(decoder[segment], segment);
-            }
-
-            var segments = new HashSet<int>();
-            foreach (var c in code)
-            {
-                segments.Add(decoderDict[c]);
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                if (SegmentLookup[i].SetEquals(segments))
-                    return i;
-            }
-
-            throw new Exception("Unable to decode this into a valid number");
         }
     }
 }
