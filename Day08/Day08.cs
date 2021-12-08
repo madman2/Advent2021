@@ -78,7 +78,7 @@ namespace AdventOfCode
             // Top segment
             decoder[2] = sevenDigit.Except(oneDigit).First();
 
-            // Segments 1 & 2, order unknown
+            // Segments 1 & 6, order unknown
             var topLeftAndMiddle = fourDigit.Except(oneDigit);
 
             var nineDigit = inputs.Where(x => (x.Count == 6 && x.IsSupersetOf(fourDigit) && x.Contains(decoder[2]))).First();
