@@ -94,6 +94,23 @@ namespace AdventOfCode.Utils
             return arrayToReturn;
         }
 
+        public static int[][] GetStreamAs2DIntArray(StreamReader reader)
+        {
+            var stringList = GetStreamAsStringList(reader);
+            var arrayToReturn = new int[stringList.Count][];
+
+            for (int i = 0; i < stringList.Count; ++i)
+            {
+                var line = stringList[i];
+                foreach (var c in line)
+                {
+                    arrayToReturn[i] = Array.ConvertAll(line.ToCharArray(), c => (int)char.GetNumericValue(c));
+                }
+            }
+
+            return arrayToReturn;
+        }
+
         public static int[][] GetStreamAs2DIntArray(StreamReader reader, char delimiter = ' ', int fromBase = 10)
         {
             var stringList = GetStreamAsStringList(reader);
@@ -201,6 +218,22 @@ namespace AdventOfCode.Utils
             }
 
             return dictToReturn;
+        }
+
+        public static List<(string, int)> GetStreamAsInstructionList(StreamReader reader)
+        {
+            var instructionList = new List<(string, int)>();
+            string line;
+            while (!string.IsNullOrEmpty(line = reader.ReadLine()))
+            {
+                var (opCode, param) = StringParsers.SplitDelimitedStringIntoStringList(line) switch
+                {
+                    var a => (a[0], Convert.ToInt32(a[1]))
+                };
+                instructionList.Add((opCode, param));
+            }
+
+            return instructionList;
         }
     }
 }

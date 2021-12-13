@@ -7,7 +7,7 @@ namespace AdventOfCode
 {
     class Program
     {
-        private const int DayToSolve = 10;
+        private const int DayToSolve = 12;
 
         static void Main(string[] args)
         {
@@ -21,37 +21,24 @@ namespace AdventOfCode
             }
             var solver = Activator.CreateInstance(solverType) as ISolver;
 
-            try
-            {
-                // Read first input file
-                var firstStarFilePath = Path.Combine(solver.GetType().Name, solver.InputFileName);
-                var firstStarFileReader = File.OpenText(firstStarFilePath);
+            // Read first input file
+            var firstStarFilePath = Path.Combine(solver.GetType().Name, solver.InputFileName);
+            var firstStarFileReader = File.OpenText(firstStarFilePath);
 
-                var stopWatch = Stopwatch.StartNew();
-                var firstStarResult = solver.SolveFirstStar(firstStarFileReader);
-                stopWatch.Stop();
-                Console.WriteLine($"First star result: {firstStarResult}, {stopWatch.ElapsedMilliseconds}ms");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Exception thrown while solving first star: {e.Message}");
-            }
+            var stopWatch = Stopwatch.StartNew();
+            var firstStarResult = solver.SolveFirstStar(firstStarFileReader);
+            stopWatch.Stop();
+            Console.WriteLine($"First star result: {firstStarResult}, {stopWatch.ElapsedMilliseconds}ms");
 
-            try
-            {
-                // Read second input file
-                var secondStarFilePath = Path.Combine(solver.GetType().Name, solver.InputFileName);
-                var secondStarFileReader = File.OpenText(secondStarFilePath);
+            // Read second input file
+            var secondStarFilePath = Path.Combine(solver.GetType().Name, solver.InputFileName);
+            var secondStarFileReader = File.OpenText(secondStarFilePath);
 
-                var stopWatch = Stopwatch.StartNew();
-                var secondStarResult = solver.SolveSecondStar(secondStarFileReader);
-                stopWatch.Stop();
-                Console.WriteLine($"Second star result: {secondStarResult}, {stopWatch.ElapsedMilliseconds}ms");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Exception thrown while solving second star: {e.Message}");
-            }
+            stopWatch.Reset();
+            stopWatch.Start();
+            var secondStarResult = solver.SolveSecondStar(secondStarFileReader);
+            stopWatch.Stop();
+            Console.WriteLine($"Second star result: {secondStarResult}, {stopWatch.ElapsedMilliseconds}ms");
         }
     }
 }
