@@ -19,8 +19,8 @@ namespace AdventOfCode
             while ((line = reader.ReadLine()) != null)
             {
                 var splitLine = line.Split("->", StringSplitOptions.TrimEntries);
-                var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ',');
-                var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ',');
+                var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ",");
+                var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ",");
 
                 var startTuple = (int.Parse(start[0]), int.Parse(start[1]));
                 var endTuple = (int.Parse(end[0]), int.Parse(end[1]));
@@ -40,8 +40,8 @@ namespace AdventOfCode
             while ((line = reader.ReadLine()) != null)
             {
                 var splitLine = line.Split("->", StringSplitOptions.TrimEntries);
-                var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ',');
-                var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ',');
+                var start = StringParsers.SplitDelimitedStringIntoStringList(splitLine[0], ",");
+                var end = StringParsers.SplitDelimitedStringIntoStringList(splitLine[1], ",");
 
                 var startTuple = (int.Parse(start[0]), int.Parse(start[1]));
                 var endTuple = (int.Parse(end[0]), int.Parse(end[1]));

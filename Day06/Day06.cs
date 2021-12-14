@@ -16,14 +16,14 @@ namespace AdventOfCode
 
         public string SolveFirstStar(StreamReader reader)
         {
-            var initialFishList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ',');
+            var initialFishList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ",");
 
             return PredictLanternfish(initialFishList, 80).ToString();
         }
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var initialFishList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ',');
+            var initialFishList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ",");
 
             return PredictLanternfish(initialFishList, 256).ToString();
         }

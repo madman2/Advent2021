@@ -45,7 +45,7 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static List<IList<string>> GetStreamAsListOfDelimitedStrings(StreamReader reader, char delimiter = ' ')
+        public static List<IList<string>> GetStreamAsListOfDelimitedStrings(StreamReader reader, string delimiter = " ")
         {
             var listToReturn = new List<IList<string>>();
             string line;
@@ -57,7 +57,7 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static List<IList<int>> GetStreamAsListOfDelimitedInts(StreamReader reader, char delimiter = ' ', int fromBase = 10)
+        public static List<IList<int>> GetStreamAsListOfDelimitedInts(StreamReader reader, string delimiter = " ", int fromBase = 10)
         {
             var listToReturn = new List<IList<int>>();
             string line;
@@ -69,7 +69,7 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static List<IList<long>> GetStreamAsListOfDelimitedLongInts(StreamReader reader, char delimiter = ' ', int fromBase = 10)
+        public static List<IList<long>> GetStreamAsListOfDelimitedLongInts(StreamReader reader, string delimiter = " ", int fromBase = 10)
         {
             var listToReturn = new List<IList<long>>();
             string line;
@@ -111,7 +111,7 @@ namespace AdventOfCode.Utils
             return arrayToReturn;
         }
 
-        public static int[][] GetStreamAs2DIntArray(StreamReader reader, char delimiter = ' ', int fromBase = 10)
+        public static int[][] GetStreamAs2DIntArray(StreamReader reader, string delimiter = " ", int fromBase = 10)
         {
             var stringList = GetStreamAsStringList(reader);
             var arrayToReturn = new int[stringList.Count][];
@@ -152,7 +152,7 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static List<List<int>> GetStreamAs2DIntList(StreamReader reader, char delimiter = ' ', int fromBase = 10)
+        public static List<List<int>> GetStreamAs2DIntList(StreamReader reader, string delimiter = " ", int fromBase = 10)
         {
             var listToReturn = new List<List<int>>();
             string line;
@@ -180,14 +180,14 @@ namespace AdventOfCode.Utils
             return listToReturn;
         }
 
-        public static IDictionary<string, string> GetStreamAsStringDict(StreamReader reader, char delimiter)
+        public static IDictionary<string, string> GetStreamAsStringDict(StreamReader reader, string delimiter)
         {
             IDictionary<string, string> dictToReturn = new Dictionary<string, string>();
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
                 var keyValuePairList = new List<string> { line };
-                if (delimiter != ' ')
+                if (delimiter != " ")
                 {
                     keyValuePairList = StringParsers.SplitDelimitedStringIntoStringList(line);
                 }
@@ -200,14 +200,14 @@ namespace AdventOfCode.Utils
             return dictToReturn;
         }
 
-        public static IDictionary<string, int> GetStreamAsIntDict(StreamReader reader, char delimiter, int fromBase = 10)
+        public static IDictionary<string, int> GetStreamAsIntDict(StreamReader reader, string delimiter, int fromBase = 10)
         {
             IDictionary<string, int> dictToReturn = new Dictionary<string, int>();
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
                 var keyValuePairList = new List<string> { line };
-                if (delimiter != ' ')
+                if (delimiter != " ")
                 {
                     keyValuePairList = StringParsers.SplitDelimitedStringIntoStringList(line);
                 }

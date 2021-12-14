@@ -13,7 +13,7 @@ namespace AdventOfCode
         public string SolveFirstStar(StreamReader reader)
         {
             var stringList = StreamParsers.GetStreamAsStringList(reader);
-            var numbersDrawn = StringParsers.SplitDelimitedStringIntoIntList(stringList[0], ',');
+            var numbersDrawn = StringParsers.SplitDelimitedStringIntoIntList(stringList[0], ",");
 
             var boards = new List<BingoBoard>();
             do
@@ -40,7 +40,7 @@ namespace AdventOfCode
         public string SolveSecondStar(StreamReader reader)
         {
             var stringList = StreamParsers.GetStreamAsStringList(reader);
-            var numbersDrawn = StringParsers.SplitDelimitedStringIntoIntList(stringList[0], ',');
+            var numbersDrawn = StringParsers.SplitDelimitedStringIntoIntList(stringList[0], ",");
 
             var boards = new List<BingoBoard>();
             do

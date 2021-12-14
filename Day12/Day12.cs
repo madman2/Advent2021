@@ -17,7 +17,7 @@ namespace AdventOfCode
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
-                var s = StringParsers.SplitDelimitedStringIntoStringList(line, '-');
+                var s = StringParsers.SplitDelimitedStringIntoStringList(line, "-");
                 if (s[0] != "end" && s[1] != "start")
                 {
                     G.AddEdge(s[0], s[1]);
@@ -39,7 +39,7 @@ namespace AdventOfCode
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
-                var s = StringParsers.SplitDelimitedStringIntoStringList(line, '-');
+                var s = StringParsers.SplitDelimitedStringIntoStringList(line, "-");
                 if (s[0] != "end" && s[1] != "start")
                 {
                     G.AddEdge(s[0], s[1]);
