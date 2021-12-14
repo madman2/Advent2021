@@ -13,7 +13,7 @@ namespace AdventOfCode
 
         public string SolveFirstStar(StreamReader reader)
         {
-            var points = StreamParsers.GetStreamAsListOfDelimitedInts(reader, ',').Select(x => (x[0], x[1])).ToList();
+            var points = StreamParsers.GetStreamAsListOfDelimitedInts(reader, ",").Select(x => (x[0], x[1])).ToList();
             var (dir, val) = ParseFold(reader.ReadLine());
             var foldResult = Fold(dir, val, points);
             return foldResult.Count.ToString();
@@ -21,7 +21,7 @@ namespace AdventOfCode
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var points = StreamParsers.GetStreamAsListOfDelimitedInts(reader, ',').Select(x => (x[0], x[1])).ToList();
+            var points = StreamParsers.GetStreamAsListOfDelimitedInts(reader, ",").Select(x => (x[0], x[1])).ToList();
 
             string line;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
@@ -64,7 +64,7 @@ namespace AdventOfCode
         private (char, int) ParseFold(string line)
         {
             var words = StringParsers.SplitDelimitedStringIntoStringList(line);
-            var fold = StringParsers.SplitDelimitedStringIntoStringList(words[2], '=');
+            var fold = StringParsers.SplitDelimitedStringIntoStringList(words[2], "=");
             return (fold[0].First(), Convert.ToInt32(fold[1]));
         }
     }

@@ -12,7 +12,7 @@ namespace AdventOfCode
 
         public string SolveFirstStar(StreamReader reader)
         {
-            var intList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ',');
+            var intList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ",");
             intList.Sort();
 
             var median = intList[intList.Count / 2];
@@ -27,7 +27,7 @@ namespace AdventOfCode
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var intList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ',');
+            var intList = StringParsers.SplitDelimitedStringIntoIntList(reader.ReadLine(), ",");
 
             int minFuel = int.MaxValue;
             for (int pos = 0; pos <= intList.Max(); ++pos)

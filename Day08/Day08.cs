@@ -16,7 +16,7 @@ namespace AdventOfCode
             int count = 0;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
-                var inputOutput = StringParsers.SplitDelimitedStringIntoStringList(line, '|');
+                var inputOutput = StringParsers.SplitDelimitedStringIntoStringList(line, "|");
                 var outputs = StringParsers.SplitDelimitedStringIntoStringList(inputOutput[1]);
                 count += outputs.Count(x => (x.Length != 5 && x.Length != 6));
             }
@@ -30,7 +30,7 @@ namespace AdventOfCode
             int sum = 0;
             while (!string.IsNullOrEmpty(line = reader.ReadLine()))
             {
-                var inputOutput = StringParsers.SplitDelimitedStringIntoStringList(line, '|');
+                var inputOutput = StringParsers.SplitDelimitedStringIntoStringList(line, "|");
                 var inputList = StringParsers.SplitDelimitedStringIntoStringList(inputOutput[0]);
                 var outputList = StringParsers.SplitDelimitedStringIntoStringList(inputOutput[1]);
                 var inputSorted = inputList.Select(x => string.Concat(x.OrderBy(c => c))).ToList();
