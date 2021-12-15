@@ -42,7 +42,7 @@ namespace AdventOfCode
 
             while (slowQueue.Count() > 0)
             {
-                var minRiskCell = slowQueue.RemoveAndReturnMinBy(x => _minRiskDict[x]);
+                var minRiskCell = slowQueue.RemoveAndReturnMin(x => _minRiskDict[x]);
                 var cellRisk = _minRiskDict[minRiskCell];
 
                 if (minRiskCell == trueEnd)

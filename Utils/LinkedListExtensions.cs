@@ -8,7 +8,7 @@ namespace AdventOfCode.Utils
 {
     public static class LinkedListExtensions
     {
-        public static T RemoveAndReturnMinBy<T, TKey>(this LinkedList<T> linkedList, Func<T, TKey> keySelector, IComparer<TKey> comparer = null)
+        public static T RemoveAndReturnMin<T, TKey>(this LinkedList<T> linkedList, Func<T, TKey> keySelector, IComparer<TKey> comparer = null)
         {
             var current = linkedList.First;
             if (current == null)
