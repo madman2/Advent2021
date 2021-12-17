@@ -34,15 +34,15 @@ namespace AdventOfCode
 
         private int FindMinRiskPath((int, int) start, (int, int) end, int n = 1)
         {
-            var fakeHeap = new LinkedList<(int row, int col)>();
+            var q = new PriorityQueue<(int row, int col), int>();
 
-            fakeHeap.AddLast((start.Item1, start.Item2));
+            q.Enqueue((start.Item1, start.Item2), 0);
             _minRiskDict.Add(start, 0);
             var trueEnd = ((end.Item1 + 1) * n - 1, (end.Item2 + 1) * n - 1);
 
-            while (fakeHeap.Count() > 0)
+            while (q.Count > 0)
             {
-                var minRiskCell = fakeHeap.RemoveAndReturnMin(x => _minRiskDict[x]);
+                var minRiskCell = q.Dequeue();
                 var cellRisk = _minRiskDict[minRiskCell];
 
                 if (minRiskCell == trueEnd)
@@ -75,7 +75,7 @@ namespace AdventOfCode
                         _minRiskDict.Add((row, col), minRiskToCell);
                     }
 
-                    fakeHeap.AddLast((row, col));
+                    q.Enqueue((row, col), minRiskToCell);
                 }
             }
 
