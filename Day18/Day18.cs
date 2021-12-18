@@ -37,6 +37,7 @@ namespace AdventOfCode
 
             int max = int.MinValue;
             for (int i = 0; i < lines.Count; ++i)
+            {
                 for (int j = 0; j < lines.Count; ++j)
                 {
                     if (i == j)
@@ -46,6 +47,7 @@ namespace AdventOfCode
                     while (Reduce(newRoot));
                     max = Math.Max(max, Magnitude(newRoot));
                 }
+            }
 
             return max.ToString();
         }
@@ -62,12 +64,12 @@ namespace AdventOfCode
 
         private bool Reduce(PairNode root)
         {
-            var s = new Stack<(PairNode, int)>();
-            s.Push((root, 0));
-
             var preOrderTraversal = new List<PairNode>();
             var explodingPairIndex = -1;
             var splitPairIndex = -1;
+
+            var s = new Stack<(PairNode, int)>();
+            s.Push((root, 0));
 
             while (s.Count > 0)
             {
@@ -80,14 +82,11 @@ namespace AdventOfCode
                 }
                 else
                 {
-                    if (level == MaxLevels)
+                    if (level == MaxLevels && explodingPairIndex < 0)
                     {
-                        if (explodingPairIndex < 0)
-                        {
-                            preOrderTraversal.Add(current);
-                            explodingPairIndex = preOrderTraversal.Count - 1;
-                            continue;
-                        }
+                        preOrderTraversal.Add(current);
+                        explodingPairIndex = preOrderTraversal.Count - 1;
+                        continue;
                     }
                 }
 
@@ -115,13 +114,9 @@ namespace AdventOfCode
         {
             var nodeToExplode = nodes[index];
             if (index > 0)
-            {
-                nodes[index - 1].Data += nodeToExplode.Data;
-            }
+                nodes[index - 1].Data += nodeToExplode.Left.Data;
             if (index < nodes.Count - 1)
-            {
-                nodes[index + 1].Data += nodeToExplode.Data;
-            }
+                nodes[index + 1].Data += nodeToExplode.Right.Data;
             (nodeToExplode.Left, nodeToExplode.Right) = (null, null);
             nodeToExplode.Data = 0;
         }
@@ -159,16 +154,12 @@ namespace AdventOfCode
 
         private class PairNode
         {
-            public PairNode Left { get; set; } = null;
-
-            public PairNode Right { get; set; } = null;
-
-            public int Data { get; set; } = -1;
-
-            public PairNode Parent { get; set; } = null;
-
             public PairNode(int data) => Data = data;
             public PairNode(PairNode left, PairNode right) => (Left, Right) = (left, right);
+
+            public PairNode Left { get; set; } = null;
+            public PairNode Right { get; set; } = null;
+            public int Data { get; set; } = -1;
         }
     }
 }
