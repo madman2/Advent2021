@@ -17,28 +17,24 @@ namespace AdventOfCode
             var p1Start = int.Parse(reader.ReadLine().Split(' ').Last());
             var p2Start = int.Parse(reader.ReadLine().Split(' ').Last());
 
-            var pos = new int[] { p1Start, p2Start };
-            var result = PlayDeterministic(pos, 0);
+            var result = PlayDeterministic(p1Start, p2Start, 0);
 
-            return ((long)result.loserScore * result.diceRolls).ToString();
+            return (result.loserScore * result.diceRolls).ToString();
         }
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var player1 = reader.ReadLine();
-            var player2 = reader.ReadLine(); ;
+            var p1Start = int.Parse(reader.ReadLine().Split(' ').Last());
+            var p2Start = int.Parse(reader.ReadLine().Split(' ').Last());
 
-            var p1Start = int.Parse(player1.Split(' ').Last());
-            var p2Start = int.Parse(player2.Split(' ').Last());
-
-            var pos = new int[] { p1Start, p2Start };
-            var result = PlayDirac(pos, 0);
+            var result = PlayDirac(p1Start, p2Start, 0);
 
             return result.Max().ToString();
         }
 
-        private (int loserScore, int diceRolls) PlayDeterministic(int[] pos, int firstTurn)
+        private (int loserScore, int diceRolls) PlayDeterministic(int p1Start, int p2Start, int firstTurn)
         {
+            var pos = new int[] { p1Start, p2Start };
             var score = new int[] { 0, 0 };
             var turn = firstTurn;
 
@@ -57,7 +53,7 @@ namespace AdventOfCode
             return (score.Min(), diceRolls);
         }
 
-        private long[] PlayDirac(int[] pos, int firstTurn)
+        private long[] PlayDirac(int p1Start, int p2Start, int firstTurn)
         {
             var possibleRolls = from i in Enumerable.Range(1, 3)
                                 from j in Enumerable.Range(1, 3)
@@ -68,7 +64,7 @@ namespace AdventOfCode
             PossibleRollSums = possibleRolls.GroupBy(i => i.Sum())
                 .ToDictionary(grp => grp.Key, grp => grp.Count());
 
-            return PlayDirac(0, pos, new int[2]);
+            return PlayDirac(0, new int[] { p1Start, p2Start }, new int[2]);
         }
 
         private long[] PlayDirac(int turn, int[] pos, int[] score)
