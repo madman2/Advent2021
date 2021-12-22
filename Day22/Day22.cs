@@ -31,17 +31,17 @@ namespace AdventOfCode
             foreach (var line in lines)
             {
                 var isOn = line.StartsWith("on");
-                var bounds = line.Substring(isOn ? 3 : 4).Split(',')
+                var prismArray = line.Substring(isOn ? 3 : 4).Split(',')
                                 .Select(x => x.Substring(2).Split("..")
                                 .Select(int.Parse).ToArray()).ToArray();
                 
-                var maxBoundary = bounds.SelectMany(x => x).Max(x => Math.Abs(x));
+                var maxBoundary = prismArray.SelectMany(x => x).Max(x => Math.Abs(x));
                 if (maxBoundary > radius)
                     continue;
 
-                var newPrism = new RectPrism((bounds[0][0], bounds[0][1]),
-                                       (bounds[1][0], bounds[1][1]),
-                                       (bounds[2][0], bounds[2][1]));
+                var newPrism = new RectPrism((prismArray[0][0], prismArray[0][1]),
+                                             (prismArray[1][0], prismArray[1][1]),
+                                             (prismArray[2][0], prismArray[2][1]));
 
                 var newPrisms = new List<RectPrism>();
                 foreach (var c in prisms)
