@@ -1,7 +1,7 @@
 ﻿using AdventOfCode.Interfaces;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace AdventOfCode
 {
@@ -17,29 +17,33 @@ namespace AdventOfCode
         public string InputFileName { get; } = "input.txt";
 
         /*
-         * This is populated using the bounds determined in the comments in ExecuteProgram()
+         * These are the independent digits and their valid ranges
          */
-        private static readonly (int min, int max)[] DigitRanges = new (int, int)[14]
+        private static readonly Dictionary<int, (int min, int max)> IndependentDigitRanges = new Dictionary<int, (int, int)>
         {
-            (8, 9), // 0
-            (1, 9), // 1
-            (9, 9), // 2
-            (1, 1), // 3
-            (4, 9), // 4
-            (1, 6), // 5
-            (1, 9), // 6
-            (1, 2), // 7
-            (1, 4), // 8
-            (6, 9), // 9
-            (1, 6), // 10
-            (7, 9), // 11
-            (1, 3), // 12
-            (4, 9)  // 13
+            {0, (8, 9) },
+            {1, (1, 9) },
+            {2, (9, 9) },
+            {3, (1, 1) },
+            {4, (4, 9) },
+            {8, (1, 4) },
+            {10, (1, 6) },
+            {11, (7, 9) }
+        };
+
+        private static readonly Dictionary<int, (int pairedIndex, int offset)> DependentDigitMapping = new Dictionary<int, (int, int)>
+        {
+            {5, (4, -3) },
+            {6, (1, 0) },
+            {7, (0, -7) },
+            {9, (8, 5) },
+            {12, (11, -6) },
+            {13, (10, 3) }
         };
 
         public string SolveFirstStar(StreamReader reader)
         {
-            var maxValidModelNumber = DigitRanges.Select(x => x.max).ToArray();
+            var maxValidModelNumber = BuildModelNumber(true);
             Debug.Assert(ExecuteProgram(maxValidModelNumber) == 0);
 
             return string.Concat(maxValidModelNumber);
@@ -47,10 +51,29 @@ namespace AdventOfCode
 
         public string SolveSecondStar(StreamReader reader)
         {
-            var minValidModelNumber = DigitRanges.Select(x => x.min).ToArray();
+            var minValidModelNumber = BuildModelNumber(false);
             Debug.Assert(ExecuteProgram(minValidModelNumber) == 0);
 
             return string.Concat(minValidModelNumber);
+        }
+
+        private int[] BuildModelNumber(bool max)
+        {
+            var modelNumber = new int[14];
+            for (int i = 0; i < modelNumber.Length; ++i)
+            {
+                if (IndependentDigitRanges.ContainsKey(i))
+                {
+                    modelNumber[i] = max ? IndependentDigitRanges[i].max : IndependentDigitRanges[i].min;
+                }
+                else
+                {
+                    var (pairedIndex, offset) = DependentDigitMapping[i];
+                    modelNumber[i] = modelNumber[pairedIndex] + offset;
+                }
+            }
+
+            return modelNumber;
         }
 
         private int ExecuteProgram(int[] inputs)
@@ -86,7 +109,7 @@ namespace AdventOfCode
              * 14 <= (w[4] + 3624) % 26 <= 22
              * 
              * 4 <= w[4] <= 9
-             * 1 <= w[5] <= 6
+             * w[5] = w[4] - 3
              */
             w = inputs[5];
             if (w == (z % 26 - 13))
@@ -97,7 +120,7 @@ namespace AdventOfCode
              * 10 <= (w[1] + 139) % 26 <= 18
              * 
              * 1 <= w[1] <= 9
-             * 1 <= w[6] <= 9
+             * w[6] = w[1]
              */
             w = inputs[6];
             if (w == (z % 26 - 9))
@@ -108,7 +131,7 @@ namespace AdventOfCode
              * 13 <= (w[0] + 5) % 26 <= 21
              * 
              * 8 <= w[0] <= 9
-             * 1 <= w[7] <= 2
+             * w[7] = w[0] - 7
              */
             w = inputs[7];
             if (w == (z % 26 - 12))
@@ -123,7 +146,7 @@ namespace AdventOfCode
              * 10 <= (w[8] + 14) % 26 <= 18
              * 
              * 1 <= w[8] <= 4
-             * 6 <= w[9] <= 9
+             * w[9] = w[8] + 5
              */
             w = inputs[9];
             if (w == (z % 26 - 9))
@@ -142,7 +165,7 @@ namespace AdventOfCode
              * 17 <= (w[11] + 140) % 26 <= 25
              * 
              * 7 <= w[11] <= 9
-             * 1 <= w[12] <= 3
+             * w[12] = w[11] - 6
              */
             w = inputs[12];
             if (w == (z % 26 - 16))
@@ -153,7 +176,7 @@ namespace AdventOfCode
              * 3 <= (w[10] + 5) % 26 <= 11
              * 
              * 1 <= w[10] <= 6
-             * 4 <= w[13] <= 9
+             * w[13] = w[10] + 3
              */
             w = inputs[13];
             if (w == (z % 26 - 2))
