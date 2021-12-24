@@ -7,8 +7,8 @@ namespace AdventOfCode
 {
     /*
      * The input is a set of instructions, I reverse-engineered them into the code in ExecuteProgram() below.
-     * All the else {} cases were removed because it is impossible for Z == 0 at the end of execution if the conditions
-     * of every single if () statement are not met.
+     * I removed all of the if () statements that are impossible to satisfy given the requirement that all w inputs
+     * need to be between [1-9].
      * 
      * I deduced the min/max values for each digit of the input that will allow ExecuteProgram() to return 0, see the comments.
      */
@@ -76,6 +76,19 @@ namespace AdventOfCode
             return modelNumber;
         }
 
+        /*
+         * This code takes 14 digits from [1-9] as input and keeps a running total (stored in Z). On each input
+         * Z is either multiplied by 26 or divided by 26 depending on the value of the input digit mod 26.
+         * 
+         * There are only certain inputs that have the opportunity to divide Z by 26; if any of these digits
+         * do not satisfy the conditions required to divide Z by 26, then it is impossible for Z == 0 when
+         * the function returns, which is the target outcome.
+         * 
+         * We can deduce the required ranges for each digit by finding the values needed to ensure that
+         * Z is divided by 26 every time possible. As it turns out, eight of the digits are completely independent.
+         * They can be set to any possible value within their computed range. The other six digits are dependent on the
+         * values chosen for six of the other eight independent digits.
+         */
         private int ExecuteProgram(int[] inputs)
         {
             var w = inputs[0];
@@ -83,11 +96,11 @@ namespace AdventOfCode
 
             w = inputs[1];
             z *= 26;
-            z += (w + 9);   // Z = 26 * w[0] + w[1] + 139
+            z += (w + 9);       // Z = 26 * w[0] + w[1] + 139
 
             w = inputs[2];
             z *= 26;
-            z += (w + 4);   // Z = 26 * 26 * w[0] + 26 * w[1] + w[2] + 3618
+            z += (w + 4);       // Z = 26 * 26 * w[0] + 26 * w[1] + w[2] + 3618
 
             /* 
              * 13 <= Z % 26 <= 21
@@ -97,12 +110,17 @@ namespace AdventOfCode
              * w[3] == 1
              */
             w = inputs[3];
-            if (w == (z % 26 - 12))
-                z /= 26;    // Z = 26 * w[0] + w[1] + 139
+            var x = z;
+            z /= 26;            // Z = 26 * w[0] + w[1] + 139
+            if (w != (x % 26 - 12))
+            {
+                z *= 26;
+                z += (w + 4);
+            }
 
             w = inputs[4];
             z *= 26;
-            z += (w + 10);  // Z = 26 * 26 * w[0] + 26 * w[1] + w[4] + 3624
+            z += (w + 10);      // Z = 26 * 26 * w[0] + 26 * w[1] + w[4] + 3624
 
             /* 
              * 14 <= Z % 26 <= 22
@@ -112,8 +130,13 @@ namespace AdventOfCode
              * w[5] = w[4] - 3
              */
             w = inputs[5];
-            if (w == (z % 26 - 13))
-                z /= 26;    // Z = 26 * w[0] + w[1] + 139
+            x = z;
+            z /= 26;            // Z = 26 * w[0] + w[1] + 139
+            if (w != (x % 26 - 13))
+            {
+                z *= 26;
+                z += (w + 14);
+            }
 
             /* 
              * 10 <= Z % 26 <= 18
@@ -123,8 +146,13 @@ namespace AdventOfCode
              * w[6] = w[1]
              */
             w = inputs[6];
-            if (w == (z % 26 - 9))
-                z /= 26;    // Z = w[0] + 5
+            x = z;
+            z /= 26;            // Z = w[0] + 5
+            if (w != (x % 26 - 9))
+            {
+                z *= 26;
+                z += (w +14);
+            }
 
             /*
              * 13 <= Z % 26 <= 21
@@ -134,12 +162,17 @@ namespace AdventOfCode
              * w[7] = w[0] - 7
              */
             w = inputs[7];
-            if (w == (z % 26 - 12))
-                z /= 26;    // Z = 0
+            x = z;
+            z /= 26;            // Z = 0
+            if (w != (x % 26 - 12))
+            {
+                z *= 26;
+                z += (w + 12);
+            }
 
             w = inputs[8];
             z *= 26;
-            z += (w + 14);  // Z = w[8] + 14
+            z += (w + 14);      // Z = w[8] + 14
 
             /*
              * 10 <= Z % 26 <= 18
@@ -149,16 +182,21 @@ namespace AdventOfCode
              * w[9] = w[8] + 5
              */
             w = inputs[9];
-            if (w == (z % 26 - 9))
-                z /= 26;    // Z = 0
+            x = z;
+            z /= 26;            // Z = 0
+            if (w != (x % 26 - 9))
+            {
+                z *= 26;
+                z += (w + 14);
+            }
 
             w = inputs[10];
             z *= 26;
-            z += (w + 5);   // Z = w[10] + 5
+            z += (w + 5);       // Z = w[10] + 5
 
             w = inputs[11];
             z *= 26;
-            z += (w + 10);  // Z = 26 * w[10] + w[11] + 140
+            z += (w + 10);      // Z = 26 * w[10] + w[11] + 140
 
             /*
              * 17 <= Z % 26 <= 25
@@ -168,8 +206,13 @@ namespace AdventOfCode
              * w[12] = w[11] - 6
              */
             w = inputs[12];
-            if (w == (z % 26 - 16))
-                z /= 26;    // Z = w[10] + 5
+            x = z;
+            z /= 26;            // Z = w[10] + 5
+            if (w != (x % 26 - 16))
+            {
+                z *= 26;
+                z += (w + 8);
+            }
 
             /*
              * 3 <= Z % 26 <= 11
@@ -179,8 +222,13 @@ namespace AdventOfCode
              * w[13] = w[10] + 3
              */
             w = inputs[13];
-            if (w == (z % 26 - 2))
-                z /= 26;    // Z = 0
+            x = z;
+            z /= 26;            // Z = 0
+            if (w != (x % 26 - 2))
+            {
+                z *= 26;
+                z += (w + 15);
+            }
 
             return z;
         }
